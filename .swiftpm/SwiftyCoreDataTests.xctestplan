@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "05A5854C-BCFB-46A0-B92A-76098EF9200C",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SwiftyCoreDataTests",
+        "name" : "SwiftyCoreDataTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -72,7 +72,8 @@ final class DatabaseClient: IDatabaseClient {
         _ request: Request<T>
     ) -> AsyncStream<[T]> {
         .init { continuation in
-            Task.detached { [unowned self] in
+            Task.detached { [weak self] in
+                guard let self else { return }
                 let values = try? await self.fetch(request)
                 continuation.yield(values ?? [])
                 
@@ -125,17 +126,6 @@ final class DatabaseClient: IDatabaseClient {
     ) throws -> [T] {
         let context = persistentContainer.viewContext
         return try fetch(request, in: context)
-    }
-    
-    func observe<T : ManagedObjectConvertible>(_ request: Request<T>) -> AnyPublisher<[T], Error> {
-        Publishers.Merge(
-            publisherFetch(request),
-            NotificationCenter.default.publisher(for: NSManagedObjectContext.didSaveObjectsNotification)
-                .tryMap { _ in
-                    self.publisherFetch(request)
-                }
-                .flatMap { $0 }
-        ).eraseToAnyPublisher()
     }
     
     // MARK: - Private
@@ -194,23 +184,5 @@ final class DatabaseClient: IDatabaseClient {
         in context: NSManagedObjectContext
     ) throws -> [T] {
         try context.fetch(request).map { try $0.decode() }
-    }
-    
-    private func publisherFetch<T : ManagedObjectConvertible>(
-        _ request: Request<T>
-    ) -> AnyPublisher<[T], Error> {
-        Deferred {
-            Future { [self] promise in
-                do {
-                    try persistentContainer.perform(action: { context in
-                        promise(Result(catching: {
-                            try self.fetch(request, in: context)
-                        }))
-                    })
-                } catch {
-                    promise(.failure(error))
-                }
-            }
-        }.eraseToAnyPublisher()
     }
 }

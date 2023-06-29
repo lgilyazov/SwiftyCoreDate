@@ -27,8 +27,8 @@ public protocol IDatabaseClient: AnyObject {
     ) throws -> Bool
     
     func delete<T: ManagedObjectConvertible>(_ item: T) throws
+    
     func fetch<T: ManagedObjectConvertible>(_ request: Request<T>) throws -> [T]
-    func observe<T: ManagedObjectConvertible>(_ request: Request<T>) -> AnyPublisher<[T], Error>
     
     // MARK: - Async
     
@@ -49,6 +49,8 @@ public protocol IDatabaseClient: AnyObject {
     ) async throws -> Bool
     
     func delete<T: ManagedObjectConvertible>(_ item: T) async throws
+    
     func fetch<T: ManagedObjectConvertible>(_ request: Request<T>) async throws -> [T]
+    
     func observe<T: ManagedObjectConvertible>(_ request: Request<T>) -> AsyncStream<[T]>
 }
