@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "SwiftyCoreData",
     platforms: [
-        .iOS(.v13), .macOS(.v12), .watchOS(.v6)
+        .iOS(.v13), .macOS(.v11), .watchOS(.v6)
     ],
     products: [
         .library(

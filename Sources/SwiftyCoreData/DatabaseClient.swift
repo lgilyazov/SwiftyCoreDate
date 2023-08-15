@@ -9,14 +9,14 @@ import Foundation
 import CoreData
 import Combine
 
-final class DatabaseClient: IDatabaseClient {
+public final class DatabaseClient: IDatabaseClient {
     
     // Dependencies
     private let persistentContainer: NSPersistentContainer
     
     // MARK: - Initialization
     
-    init(persistentContainer: NSPersistentContainer) {
+    public init(persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer
     }
     
@@ -24,7 +24,7 @@ final class DatabaseClient: IDatabaseClient {
     
     // MARK: - Async
     
-    func insert<T : ManagedObjectConvertible>(
+    public func insert<T : ManagedObjectConvertible>(
         _ item: T
     ) async throws {
         try await persistentContainer.schedule { [self] context in
@@ -32,7 +32,7 @@ final class DatabaseClient: IDatabaseClient {
         }
     }
     
-    func update<T : ManagedObjectConvertible, V: ConvertableValue>(
+    public func update<T : ManagedObjectConvertible, V: ConvertableValue>(
         _ id: T.ID,
         _ keyPath: WritableKeyPath<T, V?>,
         _ value: V?
@@ -42,7 +42,7 @@ final class DatabaseClient: IDatabaseClient {
         }
     }
     
-    func update<T : ManagedObjectConvertible, V: ConvertableValue>(
+    public func update<T : ManagedObjectConvertible, V: ConvertableValue>(
         _ id: T.ID,
         _ keyPath: WritableKeyPath<T, V>,
         _ value: V
@@ -52,7 +52,7 @@ final class DatabaseClient: IDatabaseClient {
         }
     }
     
-    func delete<T : ManagedObjectConvertible>(
+    public func delete<T : ManagedObjectConvertible>(
         _ item: T
     ) async throws {
         try await persistentContainer.schedule { [self] context in
@@ -60,7 +60,7 @@ final class DatabaseClient: IDatabaseClient {
         }
     }
     
-    func fetch<T : ManagedObjectConvertible>(
+    public func fetch<T : ManagedObjectConvertible>(
         _ request: Request<T>
     ) async throws -> [T] {
         try await persistentContainer.schedule { [self] context in
@@ -68,7 +68,7 @@ final class DatabaseClient: IDatabaseClient {
         }
     }
     
-    func observe<T : ManagedObjectConvertible>(
+    public func observe<T : ManagedObjectConvertible>(
         _ request: Request<T>
     ) -> AsyncStream<[T]> {
         .init { continuation in
@@ -91,12 +91,12 @@ final class DatabaseClient: IDatabaseClient {
     
     // MARK: - Sync
     
-    func insert<T : ManagedObjectConvertible>(_ item: T) throws {
+    public func insert<T : ManagedObjectConvertible>(_ item: T) throws {
         let context = persistentContainer.viewContext
         try insert(item, in: context)
     }
     
-    func update<T : ManagedObjectConvertible, V: ConvertableValue>(
+    public func update<T : ManagedObjectConvertible, V: ConvertableValue>(
         _ id: T.ID,
         _ keyPath: WritableKeyPath<T, V?>,
         _ value: V?
@@ -105,7 +105,7 @@ final class DatabaseClient: IDatabaseClient {
         return try update(id, keyPath, value, in: context)
     }
     
-    func update<T : ManagedObjectConvertible, V: ConvertableValue>(
+    public func update<T : ManagedObjectConvertible, V: ConvertableValue>(
         _ id: T.ID,
         _ keyPath: WritableKeyPath<T, V>,
         _ value: V
@@ -114,14 +114,14 @@ final class DatabaseClient: IDatabaseClient {
         return try update(id, keyPath, value, in: context)
     }
     
-    func delete<T : ManagedObjectConvertible>(
+    public func delete<T : ManagedObjectConvertible>(
         _ item: T
     ) throws {
         let context = persistentContainer.viewContext
         try delete(item, in: context)
     }
     
-    func fetch<T : ManagedObjectConvertible>(
+    public func fetch<T : ManagedObjectConvertible>(
         _ request: Request<T>
     ) throws -> [T] {
         let context = persistentContainer.viewContext

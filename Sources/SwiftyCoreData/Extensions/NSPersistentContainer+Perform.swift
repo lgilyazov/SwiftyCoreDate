@@ -54,7 +54,7 @@ extension NSPersistentContainer {
         
         let context = newBackgroundContext()
         
-        if #available(iOS 15.0, macOS 12.0, *) {
+        if #available(iOS 15.0, macOS 12.0, tvOS 15.0, *) {
             return try await context.perform(schedule: .immediate) {
                 try context.execute(action)
             }
